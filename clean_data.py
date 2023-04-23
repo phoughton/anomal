@@ -55,10 +55,15 @@ print(df_final)
 
 print(df_final.dtypes)
 
+# Create the plot
+ax = df_final.plot(x='Date', y='Deaths', figsize=(10, 5))
 
-# Plot the graph
-df_final.plot(x='Date', y='Deaths', figsize=(10, 5))
-# save the graph
-plt.savefig('summary/summary_ons_deaths.png')
+# Add labels and title
+ax.set_xlabel('Date')
+ax.set_ylabel('Deaths')
+ax.set_title('Deaths by Month')
+
+# Save the plot with a higher resolution (e.g., 300 dpi)
+plt.savefig('summary/summary_ons_deaths.png', dpi=150, bbox_inches='tight')
 
 
