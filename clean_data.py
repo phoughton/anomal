@@ -2,6 +2,12 @@
 import openpyxl # noqa
 import pandas as pd
 import matplotlib.pyplot as plt
+import os
+from azure.ai.anomalydetector import AnomalyDetectorClient
+from azure.core.credentials import AzureKeyCredential
+from decouple import config
+
+
 
 
 # Read in excel file into pandas dataframe
@@ -67,3 +73,9 @@ ax.set_title('Deaths by Month')
 plt.savefig('summary/summary_ons_deaths.png', dpi=150, bbox_inches='tight')
 
 
+# read api key from environment variable
+api_key = config('API_KEY')
+api_endpoint = config('API_ENDPOINT')
+
+print(api_key)
+print(api_endpoint)
