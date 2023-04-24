@@ -1,6 +1,6 @@
 openpyxl
 pandas
-azure.ai.anomalydetector
+azure-ai-anomalydetector
 azure-core 
 python-decouple
 

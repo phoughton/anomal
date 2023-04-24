@@ -2,12 +2,9 @@
 import openpyxl # noqa
 import pandas as pd
 import matplotlib.pyplot as plt
-import os
 from azure.ai.anomalydetector import AnomalyDetectorClient
 from azure.core.credentials import AzureKeyCredential
 from decouple import config
-
-
 
 
 # Read in excel file into pandas dataframe
@@ -56,26 +53,56 @@ df_sorted = df_melted.sort_values(by='Date').reset_index(drop=True)
 # Drop unnecessary columns and keep only the Deaths column
 df_final = df_sorted[['Date', 'Deaths']]
 
-# Display the final DataFrame
+series = []
+# iterate over the rows in the data frame to create a list of dictionaries
+# each dictionary contains the date and the deaths
+# this is the format required by the anomaly detector
+for index, row in df_final.iterrows():
+    series.append({'timestamp': row['Date'], 'value': row['Deaths']})
+
+print(series)
+
+# create a request data object for the azxure anomaly detector
+request_data = {
+    'series': series,
+    'granularity': 'monthly',
+    'maxAnomalyRatio': 0.25,
+    'sensitivity': 80
+}
+
+
+# create a client object to connect to the anomaly detector
+client = AnomalyDetectorClient(
+    credential=AzureKeyCredential(config('API_KEY')),
+    endpoint=config('API_ENDPOINT'))
+
+# call the anomaly detector
+anomaly_response = client.detect_univariate_entire_series(request_data)
+
+print(anomaly_response.is_anomaly)
+
+# add the is_anomaly column to the dataframe
+df_final['is_anomaly'] = anomaly_response.is_anomaly
+
+# print fill dataframe
 print(df_final)
 
-print(df_final.dtypes)
+mask = df_final['is_anomaly']
 
-# Create the plot
-ax = df_final.plot(x='Date', y='Deaths', figsize=(10, 5))
+fig, ax = plt.subplots()
 
-# Add labels and title
+# Plot the time series
+ax.plot(df_final['Date'], df_final['Deaths'], label='Deaths')
+
+# Plot the red markers where 'is_anomaly' is True
+ax.scatter(df_final.loc[mask, 'Date'], df_final.loc[mask,
+           'Deaths'], color='red', marker='o', label='Anomaly')
+
+# Configure the plot
 ax.set_xlabel('Date')
 ax.set_ylabel('Deaths')
-ax.set_title('Deaths by Month')
-
-# Save the plot with a higher resolution (e.g., 300 dpi)
+ax.set_title('Deaths Time Series with Anomalies')
+ax.legend()
+# # Save the plot with a higher resolution (e.g., 300 dpi)
 plt.savefig('summary/summary_ons_deaths.png', dpi=150, bbox_inches='tight')
 
-
-# read api key from environment variable
-api_key = config('API_KEY')
-api_endpoint = config('API_ENDPOINT')
-
-print(api_key)
-print(api_endpoint)
