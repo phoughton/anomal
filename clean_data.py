@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from azure.ai.anomalydetector import AnomalyDetectorClient
 from azure.core.credentials import AzureKeyCredential
 from decouple import config
+import matplotlib.dates as mdates
 
 
 # Read in excel file into pandas dataframe
@@ -80,16 +81,29 @@ client = AnomalyDetectorClient(
 anomaly_response = client.detect_univariate_entire_series(request_data)
 
 print(anomaly_response.is_anomaly)
-
 # add the is_anomaly column to the dataframe
 df_final['is_anomaly'] = anomaly_response.is_anomaly
+
+print("upper values")
+print(anomaly_response.upper_margins)
+
+print("low values")
+print(anomaly_response.lower_margins)
+
+# Add the margins list to the DataFrame
+df_final['upper_margin_deltas'] = anomaly_response.upper_margins
+df_final['lower_margin_deltas'] = anomaly_response.lower_margins
+
+
+df_final['upper_margin'] = df_final['Deaths'] + df_final['upper_margin_deltas']
+df_final['lower_margin'] = df_final['Deaths'] - df_final['lower_margin_deltas']
 
 # print fill dataframe
 print(df_final)
 
 mask = df_final['is_anomaly']
 
-fig, ax = plt.subplots()
+fig, ax = plt.subplots(figsize=(15, 6))  # Adjust the figure size
 
 # Plot the time series
 ax.plot(df_final['Date'], df_final['Deaths'], label='Deaths')
@@ -98,11 +112,21 @@ ax.plot(df_final['Date'], df_final['Deaths'], label='Deaths')
 ax.scatter(df_final.loc[mask, 'Date'], df_final.loc[mask,
            'Deaths'], color='red', marker='o', label='Anomaly')
 
+# Add the shaded area between the upper and lower margins
+ax.fill_between(df_final['Date'], df_final['lower_margin'],
+                df_final['upper_margin'], color='gray',
+                alpha=0.3, label='Margin')
+
+# Configure the x-axis to show year markers
+ax.xaxis.set_major_locator(mdates.YearLocator())
+ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
+
 # Configure the plot
 ax.set_xlabel('Date')
 ax.set_ylabel('Deaths')
-ax.set_title('Deaths Time Series with Anomalies')
+ax.set_title('Deaths Time Series with Anomalies and Margins')
 ax.legend()
+
 # # Save the plot with a higher resolution (e.g., 300 dpi)
 plt.savefig('summary/summary_ons_deaths.png', dpi=150, bbox_inches='tight')
 
