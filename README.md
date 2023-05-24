@@ -2,7 +2,7 @@
 
 This repository contains a Python script `calculate_and_graph_anomalies.py` that reads an Excel file with a time series of monthly death data, preprocesses the data, detects anomalies using the Azure Anomaly Detector API, and plots the time series with the detected anomalies and margin bands. The plot is then saved as a high-resolution PNG image.
 
-Azure anomaly detection is part of the Azure Cognitive Services quite of tools.
+Azure anomaly detection is part of the Azure Cognitive Services suite of tools.
 
 ## Setup Instructions
 
