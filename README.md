@@ -2,6 +2,7 @@
 
 This repository contains a Python script `calculate_and_graph_anomalies.py` that reads an Excel file with a time series of monthly death data, preprocesses the data, detects anomalies using the Azure Anomaly Detector API, and plots the time series with the detected anomalies and margin bands. The plot is then saved as a high-resolution PNG image.
 
+Azure anomaly detection is part of the Azure Cognitive Services quite of tools.
 
 ## Setup Instructions
 
@@ -36,24 +37,24 @@ And you should see a graph like this:
 
 To get an API key for the Azure Anomaly Detector service, follow these steps:
 
-    a. Sign in to the Azure portal using your Microsoft account.
+a. Sign in to the Azure portal using your Microsoft account.
 
-    c. Click on "Create a resource" in the left sidebar.
+c. Click on "Create a resource" in the left sidebar.
 
-    d. Search for "Anomaly Detector" in the search box and select the "Anomaly Detector" service from the list of results.
+d. Search for "Anomaly Detector" in the search box and select the "Anomaly Detector" service from the list of results.
 
-    e. Click the "Create" button to create a new Anomaly Detector resource.
+e. Click the "Create" button to create a new Anomaly Detector resource.
 
-    f. Fill out the required information, such as the subscription, resource group, name, region, and pricing tier. Then click the "Review + Create" button.
+f. Fill out the required information, such as the subscription, resource group, name, region, and pricing tier. Then click the "Review + Create" button.
 
-    g. Review your settings and click the "Create" button to create the Anomaly Detector resource.
+g. Review your settings and click the "Create" button to create the Anomaly Detector resource.
 
-    h. Once the deployment is complete, go to the "Overview" page of the Anomaly Detector resource you just created.
+h. Once the deployment is complete, go to the "Overview" page of the Anomaly Detector resource you just created.
 
-    i. Copy the "Endpoint" value from the "Essentials" section and add it to your .env file as the API_ENDPOINT.
+i. Copy the "Endpoint" value from the "Essentials" section and add it to your .env file as the API_ENDPOINT.
 
-    j. Go to the "Keys and Endpoint" page in the left sidebar.
+j. Go to the "Keys and Endpoint" page in the left sidebar.
 
-    k. Copy one of the two available API keys and add it to your .env file as the API_KEY.
+k. Copy one of the two available API keys and add it to your .env file as the API_KEY.
 
-    l. Now, you're ready to run the calculate_and_graph_anomalies.py script.
+l. Now, you're ready to run the calculate_and_graph_anomalies.py script.
