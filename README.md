@@ -8,7 +8,7 @@ Azure anomaly detection is part of the Azure Cognitive Services suite of tools.
 
 1. Install the required Python packages by running the following command:
     ```bash
-    pip install openpyxl pandas matplotlib azure-ai-anomalydetector python-decouple
+    pip install -r requirements.txt
     ```
 2. Get an API key for the Azure Anomaly Detector service by following the instructions in the next section.
 
